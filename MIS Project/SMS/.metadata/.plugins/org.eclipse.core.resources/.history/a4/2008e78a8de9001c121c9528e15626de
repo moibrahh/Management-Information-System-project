@@ -1,0 +1,23 @@
+package cn.nuist.dao;
+
+import cn.nuist.model.Student;
+
+import java.util.List;
+
+
+/**
+ * @author Gabriel
+ */
+public interface driverDAO {
+
+    Student findDriver(String driverId) throws Exception;
+
+    boolean addDriver(String driverId, String firstName, String lastName, String nationality, String gender) throws Exception;
+
+    boolean updateDriver(String driverId, String firstName, String lastName, String nationality, String gender) throws Exception;
+
+    List<Student> findAllDrivers(String driverId, String firstName, String lastName, String nationality, String gender) throws Exception;
+
+    boolean deleteDrivers(List<String> driverIds) throws Exception;
+
+}

@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Driver Management</title>
+    <style>
+       main, html {
+            height: 88vh;
+            font-family: "Gill Sans", sans-serif;
+            font-size: 1.4vw;
+        }
+
+        form {
+            background-color: #008080;
+            padding: 20px;
+        }
+
+        .info {
+            width: 10%;
+            margin-left: 60px;
+        }
+
+        .field > input, .ipt{
+            margin-right: 60px;
+            font-family: "Gill Sans", sans-serif;
+            font-size: 1.4vw;
+            margin-top: 10px;
+        }
+
+        table {
+            width: 98%;
+            margin: 10px auto;
+        }
+
+        th {
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.5vw;
+            font-family: "Fira Code", serif;
+            background-color: #008080;
+            color: #234433;
+            height: 60px;
+        }
+
+        tr {
+            height: 40px;
+            text-align: center;
+            background-color: #f1fff5;
+        }
+
+        .btn {
+            border-radius: 20px;
+            box-shadow: 2px 2px 4px #888;
+            font-family: "Gill Sans", sans-serif;
+            font-size: 1.2vw;
+            color: white;
+            padding: 5px;
+            margin-left: 20px;
+        }
+
+        .add {
+            background-color: 	#008000;
+        }
+
+        .delete {
+            background-color: 	#f0ffff;
+        }
+
+        .update {
+            background-color: rgba(83, 137, 167, 0.53);
+        }
+
+        .bottom {
+            display: inline-block;
+        }
+
+        .bottom-div {
+            text-align: center;
+            width: 100%;
+            margin-top: 10px;
+            height: 40px;
+        }
+    </style>
+    <link rel="stylesheet" href="../../css/main.css">
+    <script src="../../js/request.js"></script>
+    <script src="../../js/common.js"></script>
+</head>
+<body>
+<form method="post" id="queryForm">
+    <fieldset>
+        <legend>Query Area</legend>
+        <div>
+            <span class="info">
+                <label for="driverId">Driver ID:</label>
+            </span>
+            <span class="field">
+                <input name="driverId"
+                       id="driverId" type="text">
+            </span>
+            <span class="info">
+                <label for="firstName">First Name:</label>
+            </span>
+            <span class="field">
+                <input name="firstName"
+                       id="firstName" type="text">
+            </span>
+
+            <span class="info">
+                <label for="lastName">Last Name:</label>
+            </span>
+            <span class="field">
+                <input name="lastName"
+                       id="lastName" type="text">
+            </span>
+            <span class="info">
+                <label for="nationality">Nationality:</label>
+            </span>
+            <span class="field">
+                <input name="nationality"
+                       id="nationality" type="text">
+            </span>
+
+            <span class="info">
+                <label for="gender">Gender:</label>
+            </span>
+            <span class="field">
+                <select class="ipt" name="gender" id="gender" style="height: 30px; width: 15%">
+                    <option value="" selected></option>
+                    <option value="male">Male</option>
+                    <option value="Female">Female</option>
+                </select>
+            </span>
+
+
+            <input class="btn btn-big" type="button" onclick="search();" value="Search"/>
+        </div>
+    </fieldset>
+</form>
+<div>
+    <div>
+        <button class="btn add btn-big" onclick="addDriver()">
+            Add
+        </button>
+        <button class="btn delete btn-big" onclick="batchDelete()">
+            Batch Delete
+        </button>
+    </div>
+    <table id="drivers">
+    </table>
+    <div class="bottom-div">
+        <div class="bottom">
+            <button class="btn add" onclick="first()">
+                |<
+            </button>
+            <button class="btn delete" onclick="previous()">
+                <<
+            </button>
+            <button class="btn delete" onclick="next()">
+                >>
+            </button>
+            <button class="btn add" onclick="last()">
+                >|
+            </button>
+        </div>
+    </div>
+
+
+</div>
+</body>
+
+<script>
+    let drivers;
+    let number = 0;
+
+    let ini = function () {
+        iniTable();
+        search();
+    }();
+
+    function iniTable() {
+        let table = document.querySelector('#drivers');
+        table.innerHTML = "<tr>\n" +
+            "            <th style='width: 50px;'>" +
+            "            <input onclick='selectAll();' " +
+            "              class='check-box' type='checkbox'></th>\n" +
+            "            <th>ID</th>\n" +
+            "            <th>Driver ID</th>\n" +
+            "            <th>First Name</th>\n" +
+            "            <th>Last Name</th>\n" +
+            "            <th>Nationality</th>\n" +
+            "            <th>Gender</th>\n" +
+            "            <th style='width: 400px;'>Operation</th>\n" +
+            "            </tr>";
+
+        return table.children[0];
+    }
+
+    function search() {
+        let form = document.querySelector("#queryForm"); // queryForm is the id of the form
+        let formData = new FormData(form);
+        formData.append("action", QUERY);
+        sendPost("/SMS/driver", formData2Url(formData), handleQuery);
+    }
+
+    function addDrivers() {
+        let body = iniTable();
+        for (let i = number * 5; i < number * 5 + 5; i++) {
+            let driver = drivers[i];
+            if (!driver) break;
+            body.innerHTML += `
+                <tr>
+                    <td><input type="checkbox" value="${driver.id}"></td>
+                    <td>${driver.id}</td>
+                    <td>${driver.driverId}</td>
+                    <td>${driver.firstName}</td>
+                    <td>${driver.lastName}</td>
+                    <td>${driver.nationality??""}</td>
+                    <td>${driver.gender??""}</td>
+                    <td>
+                        <button class='btn delete' onclick="deleteDriver(${driver.id})">delete</button>
+                        <button class='btn update' onclick='updateDriver(${JSON.stringify(driver)})'>update</button>
+                    </td>
+                </tr>`;
+
+        }
+    }
+
+    function handleQuery(message) {
+        if (message.state === SUCCESS) {
+            drivers = message.data;
+            addDrivers(drivers, 0);
+        }
+    }
+
+    function deleteDriver(id) {
+        let form = document.querySelector("#queryForm");
+        let formData = new FormData(form);
+        formData.append("action", DELETE);
+        formData.append("ids", id);
+        sendPost("/SMS/driver", formData2Url(formData), handleDelete);
+    }
+
+    function batchDelete() {
+        let ids = '';
+        let checks = document.querySelectorAll("input[type=checkbox]");
+        for (let i = 1; i < checks.length; i++) {
+            if (checks[i].checked) {
+                ids += checks[i].value + ",";
+            }
+        }
+        ids = ids.substring(0, ids.length - 1);
+        let formData = new FormData();
+        formData.append("action", DELETE);
+        formData.append("ids", ids);
+        sendPost("/SMS/driver", formData2Url(formData), handleDelete);
+    }
+
+    function updateDriver(driver) {
+        sessionStorage.setItem("driver2Update", JSON.stringify(driver));
+        popWindow("driver_update.html", "update driver");
+    }
+
+    function handleDelete() {
+        search();
+    }
+
+    function addDriver() {
+        popWindow("driver_add.html", "add driver");
+    }
+
+    function selectAll() {
+        let checks = document.querySelectorAll("input[type=checkbox]"); // selects all checkboxes
+        for (let i = 1; i < checks.length; i++) {
+            checks[i].checked = !checks[i].checked
+        }
+    }
+
+    function first() {
+        number = 0;
+        addDrivers();
+    }
+
+    function last() {
+        if (drivers.length % 5 === 0) {
+            number = Math.floor(drivers.length / 5) - 1;
+        } else {
+            number = Math.floor(drivers.length / 5);
+        }
+        addDrivers();
+    }
+
+    function next() {
+        if ((number + 1) * 5 >= drivers.length) {
+            return;
+        }
+        number++;
+        addDrivers();
+    }
+
+    function previous() {
+        if (number === 0) {
+            return;
+        }
+        number--;
+        addDrivers();
+    }
+</script>
+</html>

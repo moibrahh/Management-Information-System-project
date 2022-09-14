@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Update Driver</title>
+    <link rel="stylesheet" href="../../css/main.css">
+    <style>
+        .main {
+            width: 100%;
+   
+       
+        }
+
+        body, html {
+            background-color: #fff;
+        }
+
+        input[readonly] {
+            background-color: #ffe4c4;
+        }
+    </style>
+</head>
+<body>
+<div class="main">
+    <form method="post" id="updateForm" style="height: 450px; background-color:#f0ffff;">
+        <fieldset>
+            <legend style="margin: 0 auto">Update Driver</legend>
+            <div>
+                <span class="lbl lbl-single">
+                    <label for="driverId">Driver ID:</label>
+                </span>
+                <span class="ipt ipt-single">
+                    <input name="driverId"
+                           id="driverId" type="text" readonly>
+                </span>
+                <span>
+                    <label class="warning" id="warningUserName"></label>
+                </span>
+            </div>
+
+            <div>
+                <span class="lbl lbl-single">
+                    <label for="firstName">First Name(*):</label>
+                </span>
+                <span class="ipt ipt-single">
+                    <input name="firstName"
+                           id="firstName" type="text" required>
+                </span>
+                <span>
+                    <label class="warning" id="warningFirstName"></label>
+                </span>
+            </div>
+
+            <div>
+                <span class="lbl lbl-single">
+                    <label for="lastName">Last Name(*):</label>
+                </span>
+                <span class="ipt ipt-single">
+                    <input name="lastName"
+                           id="lastName" type="text" required>
+                </span>
+                <span>
+                    <label class="warning" id="warningLastName"></label>
+                </span>
+            </div>
+
+            <div>
+                <span class="lbl lbl-single">
+                    <label for="nationality">Nationality:</label>
+                </span>
+                <span class="ipt ipt-single">
+                    <input name="nationality"
+                           id="nationality" type="text">
+                </span>
+                <span>
+                    <label class="warning" id="warningNationality"></label>
+                </span>
+            </div>
+
+            <div>
+                <span class="lbl lbl-single">
+                    <label for="gender">Gender:</label>
+                </span>
+                <span class="ipt ipt-single">
+                    <select name="gender" id="gender" style="width: 22.5%">
+                        <option value="" selected></option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                    </select>
+                </span>
+                <span>
+                    <label class="warning" id="warningGender"></label>
+                </span>
+            </div>
+
+            <div style="text-align:center;margin-top: 20px">
+                <input class="btn" type="submit" onsubmit="return false;">
+                <input class="btn" type="reset">
+            </div>
+        </fieldset>
+    </form>
+</div>
+<script src="../../js/request.js"></script>
+<script src="../../js/common.js"></script>
+<script>
+    let ini = function () {
+        fillInfo();
+        let form = document.querySelector("#updateForm");
+        form.addEventListener("submit", e => {
+            let formData = new FormData(form);
+            event.preventDefault();
+            formData.append("action", UPDATE);
+            sendPost("/SMS/driver", formData2Url(formData), handle);
+        });
+    }();
+
+    function fillInfo() {
+        let student2Delete = sessionStorage.getItem("driver2Update");
+        if (student2Delete) {
+            let student = JSON.parse(driver2Delete);
+            studentId.value = driver.driverId;
+            firstName.value = driver.firstName;
+            lastName.value = driver.lastName;
+            nationality.value = driver.nationality??"";
+            gender.options.selectedIndex = driver.gender === 'Male'?1:
+                driver.gender === 'Female' ? 2:0;
+
+        }
+    }
+
+    function handle(message) {
+        if (message.state === SUCCESS) {
+            alert(message.detail);
+        } else if (message.state === FAILED) {
+            alert(message.detail);
+        }
+    }
+
+
+</script>
+</body>
+</html>
+

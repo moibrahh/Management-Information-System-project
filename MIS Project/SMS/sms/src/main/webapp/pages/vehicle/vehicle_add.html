@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Vehicle</title>
+    <link rel="stylesheet" href="../../css/main.css">
+    <style>
+        .main {
+            width: 100%;
+            margin: 0 auto;
+            background: #ffffff;
+        }
+
+        body, html {
+            background-color: #fff;
+        }
+
+        input[readonly] {
+            background-color: #b6aead;
+        }
+    </style>
+</head>
+<body>
+<div class="main">
+    <form method="post" id="updateForm" style="height: 450px; background-color:#C0C0C0;">
+        <fieldset>
+            <legend style="margin: 0 auto">Add Vehicle</legend>
+            <div>
+                <span class="lbl lbl-single">
+                    <label for="driverId">Vehicle ID:</label>
+                </span>
+                <span class="ipt ipt-single">
+                    <input name="driverId"
+                           id="driverId" type="text">
+                </span>
+                <span>
+                    <label class="warning" id="warningUserName"></label>
+                </span>
+            </div>
+
+            <div>
+                <span class="lbl lbl-single">
+                    <label for="carModel">Car Model(*):</label>
+                </span>
+                <span class="ipt ipt-single">
+                    <input name="carModel"
+                           id="carModel" type="text" required>
+                </span>
+                <span>
+                    <label class="warning" id="warningFirstName"></label>
+                </span>
+            </div>
+
+            <div>
+                <span class="lbl lbl-single">
+                    <label for="carColour">Car Colour(*):</label>
+                </span>
+                <span class="ipt ipt-single">
+                    <input name="carColour"
+                           id="carColour" type="text" required>
+                </span>
+                <span>
+                    <label class="warning" id="warningLastName"></label>
+                </span>
+            </div>
+
+            <div>
+                <span class="lbl lbl-single">
+                    <label for="carYear">Car Year:</label>
+                </span>
+                <span class="ipt ipt-single">
+                    <input name="carYear"
+                           id="carYear" type="text">
+                </span>
+                <span>
+                    <label class="warning" id="warningCar Year"></label>
+                </span>
+            </div>
+
+            <div>
+                <span class="lbl lbl-single">
+                    <label for="carType">Car Type:</label>
+                </span>
+                <span class="ipt ipt-single">
+                    <select name="carType" id="carType" style="width: 22.5%">
+                        <option value="" selected></option>
+                        <option value="Bus">Bus</option>
+                        <option value="Truck">Truck</option>
+                    </select>
+                </span>
+                <span>
+                    <label class="warning" id="warningCar Type"></label>
+                </span>
+            </div>
+
+            <div style="text-align:center;margin-top: 20px">
+                <input class="btn" type="submit" onsubmit="return false;">
+                <input class="btn" type="reset">
+            </div>
+        </fieldset>
+    </form>
+</div>
+<script src="../../js/request.js"></script>
+<script src="../../js/common.js"></script>
+<script>
+    let ini = function () {
+        fillInfo();
+        let form = document.querySelector("#updateForm");
+        form.addEventListener("submit", e => {
+            let formData = new FormData(form);
+            event.preventDefault();
+            formData.append("action", INSERT);
+            sendPost("/SMS/student", formData2Url(formData), handle);
+        });
+    }();
+
+    function fillInfo() {
+        let driver2Delete = sessionStorage.getItem("driver2Update");
+        if (student2Delete) {
+            let driver = JSON.parse(student2Delete);
+            driverId.value = driver.driverId;
+            carModel.value = driver.carModel;
+            carColour.value = driver.carColour;
+            carYear.value = driver.carYear??"";
+            carType.options.selectedIndex = driver.carType === 'Bus'?1:
+                driver.carType === 'Truck' ? 2:0;
+
+        }
+    }
+
+    function handle(message) {
+        if (message.state === SUCCESS) {
+            alert(message.detail);
+        } else if (message.state === FAILED) {
+            alert(message.detail);
+        }
+    }
+
+
+</script>
+</body>
+</html>
+

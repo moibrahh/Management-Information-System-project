@@ -1,0 +1,109 @@
+html{
+    background-image: url('../images/main.jpg');
+    background-size: 100% 100vh;
+}
+
+.title{
+    font-size: large;
+    font-family: "Gill Sans", sans-serif ;
+    color: 	#000000;
+    text-align: center;
+    margin-top: 100px;
+}
+
+.main{
+    width:500px;
+    margin: 60px auto;
+    background-color: #008CBA;
+    height: 400px;
+    font-family:"cursive";
+    font-size: 1.5em;
+    border-radius: 20px;
+    z-index: 999;
+}
+
+fieldset,form{
+    height: 93%;
+    margin: 10px;
+}
+
+legend{
+    font-size: larger;
+}
+
+.lbl{
+    display: inline-block;
+    width: 200px;
+}
+
+.lbl-single{
+    margin-top: 40px;
+    margin-left:15%;
+}
+
+.lbl-multiple{
+    margin-top: 10px;
+    margin-left:5%;
+}
+
+.ipt>input{
+    height: 40px;
+    border: 1px solid #ccc;
+    padding: 2px;
+    font-size: 1em;
+    color: #444;
+}
+
+.ipt-single{
+    margin-left: 20px;
+    width: 30%;
+}
+
+.ipt-multiple{
+    margin-left: 10px;
+    width: 120px;
+}
+
+.warning{
+    color:red;
+    font-size: smaller;
+}
+
+.btn{
+    transition: all 0.3s ease-out;
+    font-family: "Gill Sans", sans-serif;
+    font-size: 20px;
+    color: #808000;
+    height: 40px;
+    border-radius: 20px;
+    box-shadow: 4px 4px 8px #888;
+    margin-left:30px;
+}
+
+.btn:hover {
+    color: #000000;
+    background-color: #f1fff5;
+    border-style: ridge;
+    box-shadow: 14px 14px 18px #888;
+    opacity: 90%;
+}
+
+.btn-big{
+    width:200px;
+}
+
+select{
+    margin-right: 40px;
+    font-family: "Gill Sans", sans-serif;
+    font-size: 1.4vw;
+    margin-top: 10px;
+    height: 40px;
+}
+
+
+
+
+
+
+
+
